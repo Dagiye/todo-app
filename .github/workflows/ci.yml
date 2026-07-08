@@ -1,0 +1,24 @@
+name: Todo App CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-project:
+    name: Check Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show project structure
+        run: ls -la
+
+      - name: Check frontend exists
+        run: ls frontend
+
+      - name: Check backend exists
+        run: ls backend
