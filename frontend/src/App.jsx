@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Home from './pages/Home';
+import AuthPage from './pages/Auth';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
@@ -11,6 +12,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
 
   const fetchTodos = async () => {
     try {
@@ -65,21 +67,33 @@ function App() {
     await updateTodo(todo.id, todo.title, !todo.completed);
   };
 
+  const handleAuthenticate = (userData) => {
+    setUser(userData);
+  };
+
   return (
     <Routes>
+      <Route path="/" element={<Navigate to={user ? '/todos' : '/login'} replace />} />
+      <Route path="/login" element={<AuthPage mode="login" onAuthenticate={handleAuthenticate} />} />
+      <Route path="/signup" element={<AuthPage mode="signup" onAuthenticate={handleAuthenticate} />} />
       <Route
-        path="/"
+        path="/todos"
         element={
-          <Home
-            todos={todos}
-            loading={loading}
-            error={error}
-            onAddTodo={addTodo}
-            onUpdateTodo={updateTodo}
-            onDeleteTodo={removeTodo}
-            onToggleComplete={toggleComplete}
-            onRetry={fetchTodos}
-          />
+          user ? (
+            <Home
+              todos={todos}
+              loading={loading}
+              error={error}
+              onAddTodo={addTodo}
+              onUpdateTodo={updateTodo}
+              onDeleteTodo={removeTodo}
+              onToggleComplete={toggleComplete}
+              onRetry={fetchTodos}
+              user={user}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
     </Routes>

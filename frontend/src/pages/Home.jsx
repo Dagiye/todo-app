@@ -2,7 +2,7 @@ import { useState } from 'react';
 import TodoForm from '../components/TodoForm';
 import TodoList from '../components/TodoList';
 
-function Home({ todos, loading, error, onAddTodo, onUpdateTodo, onDeleteTodo, onToggleComplete, onRetry }) {
+function Home({ todos, loading, error, onAddTodo, onUpdateTodo, onDeleteTodo, onToggleComplete, onRetry, user }) {
   const [title, setTitle] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
@@ -38,7 +38,7 @@ function Home({ todos, loading, error, onAddTodo, onUpdateTodo, onDeleteTodo, on
           <div>
             <p className="eyebrow">Productivity</p>
             <h1>Todo Manager</h1>
-            <p className="subtitle">Keep your tasks organized with a simple and calm workspace.</p>
+            <p className="subtitle">Welcome back, {user?.name || 'friend'} — keep your tasks organized with a simple and calm workspace.</p>
           </div>
         </header>
 
