@@ -5,7 +5,9 @@ on:
     branches:
       - main
 
+
 jobs:
+
   frontend-lint:
     name: Frontend Lint
     runs-on: ubuntu-latest
@@ -23,6 +25,28 @@ jobs:
         working-directory: frontend
         run: npm install
 
-      - name: Run ESLint
+      - name: Run frontend lint
         working-directory: frontend
+        run: npm run lint
+
+
+  backend-lint:
+    name: Backend Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Run backend lint
+        working-directory: backend
         run: npm run lint
