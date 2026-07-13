@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+});
 
 function AuthPage({ mode = 'login', onAuthenticate }) {
   const [isLogin, setIsLogin] = useState(mode !== 'signup');
@@ -16,7 +21,7 @@ function AuthPage({ mode = 'login', onAuthenticate }) {
     setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!formData.email.trim() || !formData.password.trim()) {
@@ -24,9 +29,29 @@ function AuthPage({ mode = 'login', onAuthenticate }) {
       return;
     }
 
-    const displayName = formData.name.trim() || formData.email.split('@')[0];
-    onAuthenticate({ name: displayName, email: formData.email.trim() });
-    navigate('/todos');
+    try {
+      const endpoint = isLogin ? '/auth/login' : '/auth/signup';
+      const payload = isLogin
+        ? { email: formData.email.trim(), password: formData.password }
+        : { name: formData.name.trim(), email: formData.email.trim(), password: formData.password };
+
+      const { data } = await apiClient.post(endpoint, payload);
+
+      if (data.token) {
+        localStorage.setItem('todo_token', data.token);
+      }
+
+      onAuthenticate({
+        id: data.user?.id,
+        name: data.user?.name || formData.name.trim() || formData.email.split('@')[0],
+        email: data.user?.email || formData.email.trim(),
+      });
+
+      navigate('/todos');
+    } catch (error) {
+      const serverMessage = error.response?.data?.message || 'Authentication failed.';
+      setMessage(serverMessage);
+    }
   };
 
   return (
@@ -35,7 +60,7 @@ function AuthPage({ mode = 'login', onAuthenticate }) {
         <p className="eyebrow">Welcome</p>
         <h1>{isLogin ? 'Log in to your workspace' : 'Create your account'}</h1>
         <p className="subtitle">
-          This version uses a simple frontend-only demo experience for your todos.
+          Sign in or create an account to keep your todos private and secure.
         </p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
