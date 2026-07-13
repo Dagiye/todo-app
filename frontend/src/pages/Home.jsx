@@ -2,7 +2,7 @@ import { useState } from 'react';
 import TodoForm from '../components/TodoForm';
 import TodoList from '../components/TodoList';
 
-function Home({ todos, loading, error, onAddTodo, onUpdateTodo, onDeleteTodo, onToggleComplete, onRetry, user }) {
+function Home({ todos, loading, error, onAddTodo, onUpdateTodo, onDeleteTodo, onToggleComplete, onRetry, user, onLogout }) {
   const [title, setTitle] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
@@ -34,12 +34,13 @@ function Home({ todos, loading, error, onAddTodo, onUpdateTodo, onDeleteTodo, on
   return (
     <div className="page">
       <div className="container">
-        <header className="hero">
-          <div>
+        <header className="hero hero-header">
+          <div className="hero-copy">
             <p className="eyebrow">Productivity</p>
             <h1>Todo Manager</h1>
             <p className="subtitle">Welcome back, {user?.name || 'friend'} — keep your tasks organized with a simple and calm workspace.</p>
           </div>
+          <button type="button" className="ghost-button" onClick={onLogout}>Log out</button>
         </header>
 
         <TodoForm title={title} setTitle={setTitle} onSubmit={handleSubmit} />

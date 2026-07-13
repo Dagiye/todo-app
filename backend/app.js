@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
+const authRoutes = require('./routes/authRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 
 const app = express();
@@ -12,6 +13,7 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
+app.use('/auth', authRoutes);
 app.use('/todos', todoRoutes);
 
 app.use((err, req, res, _next) => {

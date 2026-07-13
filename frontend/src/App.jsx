@@ -8,11 +8,45 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('todo_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 function App() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('todo_user');
+    const storedToken = localStorage.getItem('todo_token');
+
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    const interceptor = apiClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem('todo_token');
+          localStorage.removeItem('todo_user');
+          setUser(null);
+          setTodos([]);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => apiClient.interceptors.response.eject(interceptor);
+  }, []);
 
   const fetchTodos = async () => {
     try {
@@ -29,8 +63,12 @@ function App() {
   };
 
   useEffect(() => {
-    fetchTodos();
-  }, []);
+    if (user) {
+      fetchTodos();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const addTodo = async (title) => {
     try {
@@ -72,7 +110,15 @@ function App() {
   };
 
   const handleAuthenticate = (userData) => {
+    localStorage.setItem('todo_user', JSON.stringify(userData));
     setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('todo_token');
+    localStorage.removeItem('todo_user');
+    setUser(null);
+    setTodos([]);
   };
 
   return (
@@ -94,6 +140,7 @@ function App() {
               onToggleComplete={toggleComplete}
               onRetry={fetchTodos}
               user={user}
+              onLogout={handleLogout}
             />
           ) : (
             <Navigate to="/login" replace />
