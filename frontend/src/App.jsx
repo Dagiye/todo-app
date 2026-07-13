@@ -21,8 +21,9 @@ function App() {
       setTodos(data);
       setError('');
     } catch (err) {
-      setError('Unable to load todos right now.');
-    } finally {
+  console.error(err);
+  setError('Unable to load todos right now.');
+} finally {
       setLoading(false);
     }
   };
@@ -37,8 +38,9 @@ function App() {
       setTodos([data, ...todos]);
       setError('');
     } catch (err) {
-      setError('Unable to add todo.');
-    }
+  console.error(err);
+  setError('Unable to add todo.');
+}
   };
 
   const updateTodo = async (id, title, completed) => {
@@ -49,8 +51,9 @@ function App() {
       );
       setError('');
     } catch (err) {
-      setError('Unable to update todo.');
-    }
+  console.error(err);
+  setError('Unable to update todo.');
+}
   };
 
   const removeTodo = async (id) => {
@@ -59,8 +62,9 @@ function App() {
       setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
       setError('');
     } catch (err) {
-      setError('Unable to delete todo.');
-    }
+  console.error(err);
+  setError('Unable to delete todo.');
+}
   };
 
   const toggleComplete = async (todo) => {

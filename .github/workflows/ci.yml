@@ -6,19 +6,23 @@ on:
       - main
 
 jobs:
-  check-project:
-    name: Check Project
+  frontend-lint:
+    name: Frontend Lint
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show project structure
-        run: ls -la
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-      - name: Check frontend exists
-        run: ls frontend
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
 
-      - name: Check backend exists
-        run: ls backend
+      - name: Run ESLint
+        working-directory: frontend
+        run: npm run lint
