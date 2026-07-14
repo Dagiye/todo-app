@@ -1,93 +1,94 @@
 # Todo App
 
-A production-style full-stack Todo application built with React, Express, PostgreSQL, and Docker.
+A full-stack Todo application developed during my DevOps internship to practice containerization, CI automation, and modern software delivery.
 
-## Overview
+## Project Overview
 
-This project includes:
-- A React frontend with a responsive UI
-- An Express backend with REST API endpoints
-- A PostgreSQL database with schema and seed data
-- Docker support for running the complete stack locally
+This project started as a simple Todo application and was gradually enhanced using DevOps practices. The application allows users to manage their daily tasks while demonstrating how to build, containerize, test, and automate a full-stack application.
 
-## Folder Structure
+## Features
 
-- frontend/ — Vite + React application
-- backend/ — Express server and API routes
-- database/ — SQL schema and seed scripts
-- docker-compose.yml — Container orchestration for frontend, backend, and PostgreSQL
+### Application
 
-## Installation
+* User authentication (Login & Signup)
+* Create, update, delete, and complete todos
+* Responsive frontend interface
+* RESTful backend API
+* PostgreSQL database
 
-### Local development
+### DevOps
 
-1. Start PostgreSQL locally or use Docker.
-2. Create a database named todoapp.
-3. Run the SQL scripts in database/schema.sql and database/seed.sql.
-4. Install backend dependencies:
-   - cd backend && npm install
-5. Install frontend dependencies:
-   - cd frontend && npm install
-6. Start the backend:
-   - cd backend && npm run dev
-7. Start the frontend:
-   - cd frontend && npm run dev
+* Dockerized frontend, backend, and database
+* Docker Compose orchestration
+* GitHub Actions CI pipeline
+* Automated linting and testing
+* Automatic Docker image build and push to Docker Hub
+* Docker image versioning using Git SHA and `latest`
+* Docker layer caching for faster builds
 
-## Environment Variables
+## Internship Progress
 
-Create a .env file in the backend folder using .env.example as a template.
+### Day 1 – Docker
 
-Required variables:
-- PORT
-- DB_HOST
-- DB_PORT
-- DB_NAME
-- DB_USER
-- DB_PASSWORD
+* Containerized the frontend, backend, and PostgreSQL database.
+* Configured Docker Compose to run the complete application.
 
-## Docker
+### Day 2 – Docker Hub
 
-Run the full stack with:
+* Built Docker images.
+* Published frontend and backend images to Docker Hub.
+
+### Day 3 – Continuous Integration
+
+* Configured GitHub Actions.
+* Added frontend and backend linting.
+* Added frontend and backend tests.
+* Automated Docker image build and publishing.
+* Secured Docker Hub authentication using GitHub Secrets.
+
+> **Current Progress:** Days 1–3 completed. Days 4–5 are currently in progress.
+
+## Project Structure
+
+```text
+todo-app/
+├── frontend/
+├── backend/
+├── database/
+├── .github/workflows/
+├── docker-compose.yml
+└── README.md
+```
+
+## Running the Project
 
 ```bash
-sudo docker compose up --build
+git clone <repository-url>
+cd todo-app
+docker compose up --build
 ```
 
-The application will be available at:
-- Frontend: http://localhost:5173
-- Backend: http://localhost:5000
-- PostgreSQL: localhost:5432
+### Services
 
-## API
+* Frontend: http://localhost:5173
+* Backend: http://localhost:5000
+* PostgreSQL: localhost:5432
 
-### Endpoints
+## Continuous Integration
 
-- GET /todos
-- GET /todos/:id
-- POST /todos
-- PUT /todos/:id
-- DELETE /todos/:id
+Every Pull Request automatically:
 
-### Todo Shape
+* Runs frontend linting
+* Runs backend linting
+* Executes frontend tests
+* Executes backend tests
 
-```json
-{
-  "id": 1,
-  "title": "Write documentation",
-  "completed": false,
-  "created_at": "2026-07-05T00:00:00.000Z"
-}
-```
+After merging into the `main` branch, GitHub Actions automatically builds and publishes Docker images to Docker Hub.
 
-## Troubleshooting
+## Future Improvements
 
-- If the backend cannot connect to PostgreSQL, confirm the database is running and the environment variables are correct.
-- If the frontend cannot reach the backend, ensure VITE_API_URL points to the correct backend host.
-- If Docker containers fail to start, run docker compose logs to inspect the issue.
-
-## Recommended Git Branches
-
-- feature/frontend
-- feature/backend
-- feature/database
-- feature/docker
+* Continuous Deployment (CD)
+* Nginx reverse proxy
+* Load balancing
+* Prometheus and Grafana monitoring
+* Cloud deployment
