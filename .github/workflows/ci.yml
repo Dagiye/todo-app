@@ -81,6 +81,8 @@ jobs:
         with:
           context: ./frontend
           push: true
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
           tags: |
              ${{ secrets.DOCKER_USERNAME }}/todo-frontend:${{ github.sha }}
              ${{ secrets.DOCKER_USERNAME }}/todo-frontend:latest
