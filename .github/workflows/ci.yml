@@ -98,3 +98,15 @@ jobs:
              ${{ secrets.DOCKER_USERNAME }}/todo-backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy-render:
+    name: Deploy to Render
+    needs: docker-build-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Backend Deployment
+        run: |
+          curl -X POST ${{ secrets.BACKEND_RENDER_DEPLOY_HOOK }}
+      - name: Trigger Frontend Deployment
+        run: |
+          curl -X POST ${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK }}
